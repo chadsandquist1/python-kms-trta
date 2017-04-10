@@ -28,7 +28,7 @@ setup(
     name=NAME,
     version='0.1.0',
     description="Toolkit for creating encrypted keys.",
-    long_description=readme,
+    long_description="Toolkit for creating encrypted keys.",
     author="Chad.Sandquist",
     author_email='chad.sandquist@thomsonreuters.com',
     maintainer='TRTA Cloud Scrum Team',
