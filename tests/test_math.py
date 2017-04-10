@@ -1,5 +1,5 @@
 import unittest
-import simpleMath
+from kms_trta import simpleMath
 
 class TestFactorial(unittest.TestCase):
     """

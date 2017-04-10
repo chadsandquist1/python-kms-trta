@@ -6,6 +6,7 @@ import boto3
 
 CLIENT = boto3.client('kms')
 
+
 def create_keys(key_alias_array):
     """
     creates keys
@@ -13,37 +14,43 @@ def create_keys(key_alias_array):
     """
     for alias_string in key_alias_array:
         print(alias_string)
-        # CreateKey
-        create_key_response = CLIENT.create_key(
-            Description='test key creation',
-            KeyUsage='ENCRYPT_DECRYPT',
-            Origin='AWS_KMS',
-            BypassPolicyLockoutSafetyCheck=False,
-            Tags=[
-                {
-                    'TagKey': 'tr:application-asset-insight-id',
-                    'TagValue': '204503'
-                },
-                {
-                    'TagKey': 'tr:financial-identifier',
-                    'TagValue': '27593'
-                },
-            ]
-        )
-        print(create_key_response)
 
-        metadata = create_key_response['KeyMetadata']
-        key_id = metadata['KeyId']
-        print(key_id)
+        try:
+            fetchedKey = get_key_by_alias(alias_string)
+            print('found key: ' + fetchedKey)
+        except:
+            # CreateKey
+            create_key_response = CLIENT.create_key(
+                Description='test key creation',
+                KeyUsage='ENCRYPT_DECRYPT',
+                Origin='AWS_KMS',
+                BypassPolicyLockoutSafetyCheck=False,
+                Tags=[
+                    {
+                        'TagKey': 'tr:application-asset-insight-id',
+                        'TagValue': '204503'
+                    },
+                    {
+                        'TagKey': 'tr:financial-identifier',
+                        'TagValue': '27593'
+                    },
+                ]
+            )
+            print(create_key_response)
 
-        alias_name = 'alias/' + alias_string
+            metadata = create_key_response['KeyMetadata']
+            key_id = metadata['KeyId']
+            print(key_id)
 
-        # AddAlias
-        create_alias_response = CLIENT.create_alias(
-            AliasName=alias_name,
-            TargetKeyId=key_id
-        )
-        print(create_alias_response)
+            alias_name = 'alias/' + alias_string
+
+            # AddAlias
+            create_alias_response = CLIENT.create_alias(
+                AliasName=alias_name,
+                TargetKeyId=key_id
+            )
+            print(create_alias_response)
+        print('done!')
 
 
 def get_key_by_alias(alias_arg):
@@ -71,7 +78,7 @@ def get_key_by_alias(alias_arg):
             )
             for page in response_iterator:
                 print('policy: ' + str(page))
-            return
+            return key_id
     else:
         msg = 'no aliases found for key: ' + alias_arg
         print(msg)
@@ -85,11 +92,20 @@ def list_keys():
     print(CLIENT.list_keys())
 
 
-def list_aliases():
+def list_keys_by_alias():
+    """
+    prints list of keys 
+    """
+    CLIENT.list_keys()
+
+
+def describe_key_by_alias(alias):
     """
     prints list of aliases 
     """
-    print(CLIENT.list_aliases())
+    print('enter')
+    print(CLIENT.describe_key(KeyId='alias/' + alias))
+    print('exit')
 
 
 if __name__ == '__main__':

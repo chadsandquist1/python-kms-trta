@@ -1,0 +1,4 @@
+{
+  "tests/test_kms.py::TestKMS::test__list_aliases": true, 
+  "tests/test_kms.py::TestKMS::test_create_keys": true
+}

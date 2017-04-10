@@ -28,6 +28,5 @@ def main(n):
     print(res)
 
 if __name__ == '__main__':
-    print('entered main')
     if len(sys.argv) > 1:
         main(int(sys.argv[1]))
